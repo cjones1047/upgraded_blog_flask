@@ -29,5 +29,16 @@ def contact():
     return render_template("contact.html")
 
 
+@app.route('/post/<int:post_id>')
+def get_post(post_id):
+    requested_post = None
+    for post in all_posts_json:
+        if post['id'] == post_id:
+            requested_post = post
+            break
+
+    return render_template("post.html", requested_post=requested_post)
+
+
 if __name__ == "__main__":
     app.run(port=8000, debug=True)
