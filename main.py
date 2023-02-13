@@ -24,9 +24,17 @@ def about():
     return render_template("about.html")
 
 
-@app.route('/contact')
+@app.route('/contact', methods=["GET", "POST"])
 def contact():
-    return render_template("contact.html")
+    if request.method == "GET":
+        return render_template("contact.html")
+
+    print(request.form["name"])
+    print(request.form["email"])
+    print(request.form["phone"])
+    print(request.form["message"])
+
+    return "<h1>Submission successful</h1>"
 
 
 @app.route('/post/<int:post_id>')
@@ -38,16 +46,6 @@ def get_post(post_id):
             break
 
     return render_template("post.html", requested_post=requested_post)
-
-
-@app.route('/form-entry', methods=["POST"])
-def receive_data():
-    print(request.form["name"])
-    print(request.form["email"])
-    print(request.form["phone"])
-    print(request.form["message"])
-
-    return "<h1>Submission successful</h1>"
 
 
 if __name__ == "__main__":
