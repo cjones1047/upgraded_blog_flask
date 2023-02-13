@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from datetime import datetime
 import requests
 
@@ -38,6 +38,16 @@ def get_post(post_id):
             break
 
     return render_template("post.html", requested_post=requested_post)
+
+
+@app.route('/form-entry', methods=["POST"])
+def receive_data():
+    print(request.form["name"])
+    print(request.form["email"])
+    print(request.form["phone"])
+    print(request.form["message"])
+
+    return "<h1>Submission successful</h1>"
 
 
 if __name__ == "__main__":
