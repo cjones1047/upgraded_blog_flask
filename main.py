@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request
 from datetime import datetime
 import requests
+import os
+import dotenv
+import smtplib
 
 app = Flask(__name__)
 
@@ -30,10 +33,23 @@ def contact():
     if request.method == "GET":
         header_message = "Contact Me"
     elif request.method == "POST":
-        print(request.form["name"])
-        print(request.form["email"])
-        print(request.form["phone"])
-        print(request.form["message"])
+        dotenv.load_dotenv()
+        sender_email = os.getenv("SENDER_EMAIL")
+        sender_email_password = os.getenv("SENDER_EMAIL_PASSWORD")
+        recipient_email = os.getenv("RECIPIENT_EMAIL")
+        message = (f"Subject:Message from {request.form['name']}\n\n"
+                   f"Sender's email: {request.form['email']}\n"
+                   f"Sender's phone number: {request.form['phone']}\n\n"
+                   "Message:\n"
+                   f"{request.form['message']}")
+
+        with smtplib.SMTP("smtp.gmail.com", port=587) as connection:
+            connection.starttls()
+            connection.login(user=sender_email, password=sender_email_password)
+            connection.sendmail(from_addr=sender_email,
+                                to_addrs=recipient_email,
+                                msg=message.encode("utf-8"))
+
         header_message = "Successfully sent your message"
 
     return render_template("contact.html", header_message=header_message)
