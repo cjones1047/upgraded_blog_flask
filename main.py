@@ -26,15 +26,17 @@ def about():
 
 @app.route('/contact', methods=["GET", "POST"])
 def contact():
+    header_message = None
     if request.method == "GET":
-        return render_template("contact.html")
+        header_message = "Contact Me"
+    elif request.method == "POST":
+        print(request.form["name"])
+        print(request.form["email"])
+        print(request.form["phone"])
+        print(request.form["message"])
+        header_message = "Successfully sent your message"
 
-    print(request.form["name"])
-    print(request.form["email"])
-    print(request.form["phone"])
-    print(request.form["message"])
-
-    return "<h1>Submission successful</h1>"
+    return render_template("contact.html", header_message=header_message)
 
 
 @app.route('/post/<int:post_id>')
